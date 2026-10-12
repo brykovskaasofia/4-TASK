@@ -48,4 +48,40 @@ public class PhoneBook {
         }
         return result;
     }
+    public ArrayList<Subscriber> findByPhone(String phone) {
+        ArrayList<Subscriber> result = new ArrayList<>();
+        for (Subscriber subscriber : subscribers) {
+            if (subscriber.getPhone1().equals(phone)
+                    || subscriber.getPhone2().equals(phone)
+                    || subscriber.getPhone3().equals(phone)) {
+                result.add(subscriber);
+            }
+        }
+        return result;
+    }
+
+    private int compareSubscribers(Subscriber a, Subscriber b) {
+        int result = a.getSurname().compareToIgnoreCase(b.getSurname());
+        if (result != 0) {
+            return result;
+        }
+        result = a.getName().compareToIgnoreCase(b.getName());
+        if (result != 0) {
+            return result;
+        }
+        return a.getPhone1().compareTo(b.getPhone1());
+    }
+
+    public void sortSubscribers() {
+        for (int i = 0; i < subscribers.size() - 1; i++) {
+            for (int j = 0; j < subscribers.size() - 1 - i; j++) {
+                Subscriber first = subscribers.get(j);
+                Subscriber second = subscribers.get(j + 1);
+                if (compareSubscribers(first, second) > 0) {
+                    subscribers.set(j, second);
+                    subscribers.set(j + 1, first);
+                }
+            }
+        }
+    }
 }
