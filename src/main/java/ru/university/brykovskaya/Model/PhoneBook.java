@@ -25,4 +25,17 @@ public class PhoneBook {
         return true;
     }
 
+    public boolean editSubscriber(int index, String surname, String name,
+                                  String phone1, String phone2, String phone3) {
+        if (index < 0 || index >= subscribers.size()) {
+            return false;
+        }
+        Subscriber subscriber = subscribers.get(index);
+        subscriber.setSurname(surname);
+        subscriber.setName(name);
+        subscriber.setPhone1(phone1);
+        subscriber.setPhone2(phone2);
+        subscriber.setPhone3(phone3);
+        return true;
+    }
 }
