@@ -38,4 +38,14 @@ public class PhoneBook {
         subscriber.setPhone3(phone3);
         return true;
     }
+
+    public ArrayList<Subscriber> findBySurname(String surname) {
+        ArrayList<Subscriber> result = new ArrayList<>();
+        for (Subscriber subscriber : subscribers) {
+            if (subscriber.getSurname().equalsIgnoreCase(surname)) {
+                result.add(subscriber);
+            }
+        }
+        return result;
+    }
 }
