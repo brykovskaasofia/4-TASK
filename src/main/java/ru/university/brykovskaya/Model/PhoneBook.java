@@ -16,4 +16,13 @@ public class PhoneBook {
     public int getCount() {
         return subscribers.size();
     }
+
+    public boolean deleteSubscriber(int index) {
+        if (index < 0 || index >= subscribers.size()) {
+            return false;
+        }
+        subscribers.remove(index);
+        return true;
+    }
+
 }
