@@ -34,4 +34,36 @@ public class Subscriber {
     public String getPhone3() {
         return phone3;
     }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPhone1(String phone1) {
+        this.phone1 = phone1;
+    }
+
+    public void setPhone2(String phone2) {
+        this.phone2 = phone2;
+    }
+
+    public void setPhone3(String phone3) {
+        this.phone3 = phone3;
+    }
+
+    @Override
+    public String toString() {
+        String result = surname + " " + name + " | " + phone1;
+        if (!phone2.isEmpty()) {
+            result = result + ", " + phone2;
+        }
+        if (!phone3.isEmpty()) {
+            result = result + ", " + phone3;
+        }
+        return result;
+    }
 }
