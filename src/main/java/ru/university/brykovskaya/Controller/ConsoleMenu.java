@@ -24,6 +24,8 @@ public class ConsoleMenu {
                 showAll();
             } else if (choice.equals("2")) {
                 addSubscriber();
+            } else if (choice.equals("3")) {
+                deleteSubscriber();
             } else if (choice.equals("0")) {
                 running = false;
             } else {
@@ -38,6 +40,7 @@ public class ConsoleMenu {
         System.out.println("=== Телефонный справочник ===");
         System.out.println("1. Показать всех абонентов");
         System.out.println("2. Добавить абонента");
+        System.out.println("3. Удалить абонента");
         System.out.println("0. Выход");
         System.out.print("Выберите пункт: ");
     }
@@ -76,5 +79,27 @@ public class ConsoleMenu {
         phoneBook.addSubscriber(subscriber);
         repository.save(phoneBook);
         System.out.println("Абонент добавлен");
+    }
+
+    private void deleteSubscriber() {
+        if (phoneBook.getCount() == 0) {
+            System.out.println("Справочник пуст");
+            return;
+        }
+        showAll();
+        System.out.print("Введите номер абонента для удаления: ");
+        String text = scanner.nextLine();
+        try {
+            int number = Integer.parseInt(text);
+            boolean deleted = phoneBook.deleteSubscriber(number - 1);
+            if (deleted) {
+                repository.save(phoneBook);
+                System.out.println("Абонент удалён");
+            } else {
+                System.out.println("Абонента с таким номером нет");
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Нужно ввести число");
+        }
     }
 }
