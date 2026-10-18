@@ -4,6 +4,7 @@ import ru.university.brykovskaya.Model.PhoneBook;
 import ru.university.brykovskaya.Model.Subscriber;
 import ru.university.brykovskaya.Repository.FileRepository;
 import java.util.Scanner;
+import java.util.ArrayList;
 
 public class ConsoleMenu {
     private PhoneBook phoneBook;
@@ -28,6 +29,8 @@ public class ConsoleMenu {
                 deleteSubscriber();
             } else if (choice.equals("4")) {
                 editSubscriber();
+            } else if (choice.equals("5")) {
+                searchBySurname();
             } else if (choice.equals("0")) {
                 running = false;
             } else {
@@ -44,6 +47,7 @@ public class ConsoleMenu {
         System.out.println("2. Добавить абонента");
         System.out.println("3. Удалить абонента");
         System.out.println("4. Редактировать абонента");
+        System.out.println("5. Найти по фамилии");
         System.out.println("0. Выход");
         System.out.print("Выберите пункт: ");
     }
@@ -165,6 +169,20 @@ public class ConsoleMenu {
             System.out.println("Данные абонента изменены");
         } catch (NumberFormatException e) {
             System.out.println("Нужно ввести число");
+        }
+    }
+
+    private void searchBySurname() {
+        System.out.print("Введите фамилию: ");
+        String surname = scanner.nextLine();
+        ArrayList<Subscriber> found = phoneBook.findBySurname(surname);
+        if (found.isEmpty()) {
+            System.out.println("Никого не найдено");
+            return;
+        }
+        System.out.println("Найдено абонентов: " + found.size());
+        for (Subscriber subscriber : found) {
+            System.out.println(subscriber);
         }
     }
 }
