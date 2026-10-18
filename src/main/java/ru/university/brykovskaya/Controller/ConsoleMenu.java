@@ -26,6 +26,8 @@ public class ConsoleMenu {
                 addSubscriber();
             } else if (choice.equals("3")) {
                 deleteSubscriber();
+            } else if (choice.equals("4")) {
+                editSubscriber();
             } else if (choice.equals("0")) {
                 running = false;
             } else {
@@ -41,6 +43,7 @@ public class ConsoleMenu {
         System.out.println("1. Показать всех абонентов");
         System.out.println("2. Добавить абонента");
         System.out.println("3. Удалить абонента");
+        System.out.println("4. Редактировать абонента");
         System.out.println("0. Выход");
         System.out.print("Выберите пункт: ");
     }
@@ -98,6 +101,68 @@ public class ConsoleMenu {
             } else {
                 System.out.println("Абонента с таким номером нет");
             }
+        } catch (NumberFormatException e) {
+            System.out.println("Нужно ввести число");
+        }
+    }
+
+    private void editSubscriber() {
+        if (phoneBook.getCount() == 0) {
+            System.out.println("Справочник пуст");
+            return;
+        }
+        showAll();
+        System.out.print("Введите номер абонента для редактирования: ");
+        String text = scanner.nextLine();
+        try {
+            int number = Integer.parseInt(text);
+            int index = number - 1;
+            if (index < 0 || index >= phoneBook.getCount()) {
+                System.out.println("Абонента с таким номером нет");
+                return;
+            }
+            Subscriber old = phoneBook.getSubscribers().get(index);
+
+            System.out.println("Чтобы не менять поле, просто нажмите Enter.");
+            System.out.println("Чтобы очистить телефон 2 или 3, введите знак -");
+
+            System.out.print("Фамилия (" + old.getSurname() + "): ");
+            String surname = scanner.nextLine();
+            if (surname.isEmpty()) {
+                surname = old.getSurname();
+            }
+
+            System.out.print("Имя (" + old.getName() + "): ");
+            String name = scanner.nextLine();
+            if (name.isEmpty()) {
+                name = old.getName();
+            }
+
+            System.out.print("Телефон 1 (" + old.getPhone1() + "): ");
+            String phone1 = scanner.nextLine();
+            if (phone1.isEmpty()) {
+                phone1 = old.getPhone1();
+            }
+
+            System.out.print("Телефон 2 (" + old.getPhone2() + "): ");
+            String phone2 = scanner.nextLine();
+            if (phone2.isEmpty()) {
+                phone2 = old.getPhone2();
+            } else if (phone2.equals("-")) {
+                phone2 = "";
+            }
+
+            System.out.print("Телефон 3 (" + old.getPhone3() + "): ");
+            String phone3 = scanner.nextLine();
+            if (phone3.isEmpty()) {
+                phone3 = old.getPhone3();
+            } else if (phone3.equals("-")) {
+                phone3 = "";
+            }
+
+            phoneBook.editSubscriber(index, surname, name, phone1, phone2, phone3);
+            repository.save(phoneBook);
+            System.out.println("Данные абонента изменены");
         } catch (NumberFormatException e) {
             System.out.println("Нужно ввести число");
         }
