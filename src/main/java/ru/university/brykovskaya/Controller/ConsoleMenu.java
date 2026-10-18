@@ -31,6 +31,8 @@ public class ConsoleMenu {
                 editSubscriber();
             } else if (choice.equals("5")) {
                 searchBySurname();
+            } else if (choice.equals("6")) {
+                searchByPhone();
             } else if (choice.equals("0")) {
                 running = false;
             } else {
@@ -48,6 +50,8 @@ public class ConsoleMenu {
         System.out.println("3. Удалить абонента");
         System.out.println("4. Редактировать абонента");
         System.out.println("5. Найти по фамилии");
+        System.out.println("6. Найти по номеру телефона");
+
         System.out.println("0. Выход");
         System.out.print("Выберите пункт: ");
     }
@@ -176,6 +180,20 @@ public class ConsoleMenu {
         System.out.print("Введите фамилию: ");
         String surname = scanner.nextLine();
         ArrayList<Subscriber> found = phoneBook.findBySurname(surname);
+        if (found.isEmpty()) {
+            System.out.println("Никого не найдено");
+            return;
+        }
+        System.out.println("Найдено абонентов: " + found.size());
+        for (Subscriber subscriber : found) {
+            System.out.println(subscriber);
+        }
+    }
+
+    private void searchByPhone() {
+        System.out.print("Введите номер телефона: ");
+        String phone = scanner.nextLine();
+        ArrayList<Subscriber> found = phoneBook.findByPhone(phone);
         if (found.isEmpty()) {
             System.out.println("Никого не найдено");
             return;
