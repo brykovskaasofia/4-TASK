@@ -1,8 +1,6 @@
 package ru.university.brykovskaya.Repository;
-
 import ru.university.brykovskaya.Model.PhoneBook;
 import ru.university.brykovskaya.Model.Subscriber;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -12,7 +10,6 @@ import java.io.PrintWriter;
 
 public class FileRepository {
     private String fileName;
-
     public FileRepository(String fileName) {
         this.fileName = fileName;
     }
@@ -31,6 +28,7 @@ public class FileRepository {
             return true;
         } catch (IOException e) {
             return false;
+
         }
     }
 
