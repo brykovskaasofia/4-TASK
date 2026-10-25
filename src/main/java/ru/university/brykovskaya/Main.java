@@ -1,4 +1,4 @@
-package ru.university.brykovskaya;
+ package ru.university.brykovskaya;
 
 import ru.university.brykovskaya.Controller.ConsoleMenu;
 import ru.university.brykovskaya.Model.PhoneBook;
