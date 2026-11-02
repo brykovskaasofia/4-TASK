@@ -1,8 +1,6 @@
 package ru.university.brykovskaya.Controller;
 
 import ru.university.brykovskaya.Model.PhoneBook;
-import ru.university.brykovskaya.Exception.BusinessException;
-import ru.university.brykovskaya.Exception.SubscriberNotFoundException;
 import ru.university.brykovskaya.Model.Subscriber;
 import ru.university.brykovskaya.Repository.FileRepository;
 import java.util.Scanner;
@@ -83,14 +81,15 @@ public class ConsoleMenu {
         System.out.print("Телефон 3 (можно пропустить, нажав Enter): ");
         String phone3 = scanner.nextLine();
 
-        try {
-            Subscriber subscriber = new Subscriber(surname, name, phone1, phone2, phone3);
-            phoneBook.addSubscriber(subscriber);
-            repository.save(phoneBook);
-            System.out.println("Абонент добавлен");
-        } catch (BusinessException e) {
-            System.out.println("Ошибка: " + e.getMessage());
+        if (surname.isEmpty() || phone1.isEmpty()) {
+            System.out.println("Фамилия и первый телефон обязательны");
+            return;
         }
+
+        Subscriber subscriber = new Subscriber(surname, name, phone1, phone2, phone3);
+        phoneBook.addSubscriber(subscriber);
+        repository.save(phoneBook);
+        System.out.println("Абонент добавлен");
     }
 
     private void deleteSubscriber() {
@@ -103,13 +102,15 @@ public class ConsoleMenu {
         String text = scanner.nextLine();
         try {
             int number = Integer.parseInt(text);
-            phoneBook.deleteSubscriber(number - 1);
-            repository.save(phoneBook);
-            System.out.println("Абонент удалён");
+            boolean deleted = phoneBook.deleteSubscriber(number - 1);
+            if (deleted) {
+                repository.save(phoneBook);
+                System.out.println("Абонент удалён");
+            } else {
+                System.out.println("Абонента с таким номером нет");
+            }
         } catch (NumberFormatException e) {
             System.out.println("Нужно ввести число");
-        } catch (BusinessException e) {
-            System.out.println("Ошибка: " + e.getMessage());
         }
     }
 
@@ -125,7 +126,8 @@ public class ConsoleMenu {
             int number = Integer.parseInt(text);
             int index = number - 1;
             if (index < 0 || index >= phoneBook.getCount()) {
-                throw new SubscriberNotFoundException(number);
+                System.out.println("Абонента с таким номером нет");
+                return;
             }
             Subscriber old = phoneBook.getSubscribers().get(index);
 
@@ -171,8 +173,6 @@ public class ConsoleMenu {
             System.out.println("Данные абонента изменены");
         } catch (NumberFormatException e) {
             System.out.println("Нужно ввести число");
-        } catch (BusinessException e) {
-            System.out.println("Ошибка: " + e.getMessage());
         }
     }
 

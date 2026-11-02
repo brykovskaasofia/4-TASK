@@ -1,10 +1,10 @@
 package ru.university.brykovskaya.Model;
 
 import org.junit.jupiter.api.Test;
-import ru.university.brykovskaya.Exception.SubscriberDataException;
-import ru.university.brykovskaya.Exception.SubscriberNotFoundException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class PhoneBookTest {
 
@@ -74,25 +74,27 @@ public class PhoneBookTest {
         assertEquals(1, phoneBook.findByPhone("333").size());
         assertTrue(phoneBook.findByPhone("444").isEmpty());
     }
+
     @Test
     public void deleteRemovesCorrectSubscriber() {
         PhoneBook phoneBook = new PhoneBook();
         phoneBook.addSubscriber(new Subscriber("Иванов", "Иван", "111", "", ""));
         phoneBook.addSubscriber(new Subscriber("Петров", "Пётр", "222", "", ""));
 
-        phoneBook.deleteSubscriber(0);
+        boolean deleted = phoneBook.deleteSubscriber(0);
 
+        assertTrue(deleted);
         assertEquals(1, phoneBook.getCount());
         assertEquals("Петров", phoneBook.getSubscribers().get(0).getSurname());
     }
 
     @Test
-    public void deleteWithWrongIndexThrowsException() {
+    public void deleteWithWrongIndexChangesNothing() {
         PhoneBook phoneBook = new PhoneBook();
         phoneBook.addSubscriber(new Subscriber("Иванов", "Иван", "111", "", ""));
 
-        assertThrows(SubscriberNotFoundException.class, () -> phoneBook.deleteSubscriber(5));
-        assertThrows(SubscriberNotFoundException.class, () -> phoneBook.deleteSubscriber(-1));
+        assertFalse(phoneBook.deleteSubscriber(5));
+        assertFalse(phoneBook.deleteSubscriber(-1));
         assertEquals(1, phoneBook.getCount());
     }
 
@@ -101,9 +103,10 @@ public class PhoneBookTest {
         PhoneBook phoneBook = new PhoneBook();
         phoneBook.addSubscriber(new Subscriber("Иванов", "Иван", "111", "", ""));
 
-        phoneBook.editSubscriber(0, "Сидоров", "Олег", "555", "666", "777");
+        boolean edited = phoneBook.editSubscriber(0, "Сидоров", "Олег", "555", "666", "777");
 
         Subscriber subscriber = phoneBook.getSubscribers().get(0);
+        assertTrue(edited);
         assertEquals("Сидоров", subscriber.getSurname());
         assertEquals("Олег", subscriber.getName());
         assertEquals("555", subscriber.getPhone1());
@@ -112,42 +115,11 @@ public class PhoneBookTest {
     }
 
     @Test
-    public void editWithWrongIndexThrowsException() {
+    public void editWithWrongIndexReturnsFalse() {
         PhoneBook phoneBook = new PhoneBook();
         phoneBook.addSubscriber(new Subscriber("Иванов", "Иван", "111", "", ""));
 
-        assertThrows(SubscriberNotFoundException.class,
-                () -> phoneBook.editSubscriber(3, "Сидоров", "Олег", "555", "", ""));
+        assertFalse(phoneBook.editSubscriber(3, "Сидоров", "Олег", "555", "", ""));
         assertEquals("Иванов", phoneBook.getSubscribers().get(0).getSurname());
-    }
-
-    @Test
-    public void editWithEmptySurnameThrowsExceptionAndChangesNothing() {
-        PhoneBook phoneBook = new PhoneBook();
-        phoneBook.addSubscriber(new Subscriber("Иванов", "Иван", "111", "", ""));
-
-        assertThrows(SubscriberDataException.class,
-                () -> phoneBook.editSubscriber(0, "", "Олег", "555", "", ""));
-        assertEquals("Иванов", phoneBook.getSubscribers().get(0).getSurname());
-        assertEquals("111", phoneBook.getSubscribers().get(0).getPhone1());
-    }
-
-    @Test
-    public void addWithEmptySurnameThrowsException() {
-        PhoneBook phoneBook = new PhoneBook();
-
-        assertThrows(SubscriberDataException.class,
-                () -> phoneBook.addSubscriber(new Subscriber("", "Иван", "111", "", "")));
-        assertEquals(0, phoneBook.getCount());
-    }
-
-    @Test
-    public void addWithEmptyFirstPhoneThrowsException() {
-        PhoneBook phoneBook = new PhoneBook();
-
-        assertThrows(SubscriberDataException.class,
-                () -> phoneBook.addSubscriber(new Subscriber("Иванов", "Иван", "", "", "")));
-        assertEquals(0, phoneBook.getCount());
     }
 }
-
