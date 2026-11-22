@@ -6,6 +6,7 @@ public class Subscriber {
     private String phone1;
     private String phone2;
     private String phone3;
+    private int id;
 
     public Subscriber(String surname, String name, String phone1, String phone2, String phone3) {
         this.surname = surname;
@@ -14,7 +15,11 @@ public class Subscriber {
         this.phone2 = phone2;
         this.phone3 = phone3;
     }
-
+    public Subscriber(int id, String surname, String name,
+                      String phone1, String phone2, String phone3) {
+        this(surname, name, phone1, phone2, phone3);
+        this.id = id;
+    }
     public String getSurname() {
         return surname;
     }
@@ -33,6 +38,14 @@ public class Subscriber {
 
     public String getPhone3() {
         return phone3;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public void setSurname(String surname) {
