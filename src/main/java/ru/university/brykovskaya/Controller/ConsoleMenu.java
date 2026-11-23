@@ -2,18 +2,18 @@ package ru.university.brykovskaya.Controller;
 
 import ru.university.brykovskaya.Model.PhoneBook;
 import ru.university.brykovskaya.Exception.BusinessException;
-import ru.university.brykovskaya.Exception.SubscriberNotFoundException;
+import ru.university.brykovskaya.Exception.DatabaseException;
 import ru.university.brykovskaya.Model.Subscriber;
-import ru.university.brykovskaya.Repository.FileRepository;
+import ru.university.brykovskaya.Repository.DatabaseRepository;
 import java.util.Scanner;
 import java.util.ArrayList;
 
 public class ConsoleMenu {
     private PhoneBook phoneBook;
-    private FileRepository repository;
+    private DatabaseRepository repository;
     private Scanner scanner = new Scanner(System.in);
 
-    public ConsoleMenu(PhoneBook phoneBook, FileRepository repository) {
+    public ConsoleMenu(PhoneBook phoneBook, DatabaseRepository repository) {
         this.phoneBook = phoneBook;
         this.repository = repository;
     }
@@ -86,7 +86,12 @@ public class ConsoleMenu {
         try {
             Subscriber subscriber = new Subscriber(surname, name, phone1, phone2, phone3);
             phoneBook.addSubscriber(subscriber);
-            repository.save(phoneBook);
+            try {
+                repository.insert(subscriber);
+            } catch (DatabaseException e) {
+                phoneBook.deleteSubscriber(phoneBook.getCount() - 1);
+                throw e;
+            }
             System.out.println("Абонент добавлен");
         } catch (BusinessException e) {
             System.out.println("Ошибка: " + e.getMessage());
@@ -103,8 +108,9 @@ public class ConsoleMenu {
         String text = scanner.nextLine();
         try {
             int number = Integer.parseInt(text);
+            Subscriber subscriber = phoneBook.getSubscriber(number - 1);
+            repository.delete(subscriber.getId());
             phoneBook.deleteSubscriber(number - 1);
-            repository.save(phoneBook);
             System.out.println("Абонент удалён");
         } catch (NumberFormatException e) {
             System.out.println("Нужно ввести число");
@@ -124,10 +130,7 @@ public class ConsoleMenu {
         try {
             int number = Integer.parseInt(text);
             int index = number - 1;
-            if (index < 0 || index >= phoneBook.getCount()) {
-                throw new SubscriberNotFoundException(number);
-            }
-            Subscriber old = phoneBook.getSubscribers().get(index);
+            Subscriber old = phoneBook.getSubscriber(index);
 
             System.out.println("Чтобы не менять поле, просто нажмите Enter.");
             System.out.println("Чтобы очистить телефон 2 или 3, введите знак -");
@@ -167,7 +170,7 @@ public class ConsoleMenu {
             }
 
             phoneBook.editSubscriber(index, surname, name, phone1, phone2, phone3);
-            repository.save(phoneBook);
+            repository.update(old);
             System.out.println("Данные абонента изменены");
         } catch (NumberFormatException e) {
             System.out.println("Нужно ввести число");

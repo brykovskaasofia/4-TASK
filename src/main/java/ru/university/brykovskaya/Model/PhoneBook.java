@@ -20,6 +20,12 @@ public class PhoneBook {
     public int getCount() {
         return subscribers.size();
     }
+    public Subscriber getSubscriber(int index) {
+        if (index < 0 || index >= subscribers.size()) {
+            throw new SubscriberNotFoundException(index + 1);
+        }
+        return subscribers.get(index);
+    }
 
     public void deleteSubscriber(int index) {
         if (index < 0 || index >= subscribers.size()) {
@@ -33,6 +39,7 @@ public class PhoneBook {
         if (index < 0 || index >= subscribers.size()) {
             throw new SubscriberNotFoundException(index + 1);
         }
+        checkData(surname, phone1);
         Subscriber subscriber = subscribers.get(index);
         subscriber.setSurname(surname);
         subscriber.setName(name);
